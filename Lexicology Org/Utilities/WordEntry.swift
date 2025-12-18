@@ -2,7 +2,7 @@
 //  WordEntry.swift
 //  Lexicology Org
 //
-//  Created by Ian. T. Dzingira on 29/09/2025.
+//  Created by Ian. T. Dzingira on 24/10/2025.
 //
 
 import SwiftData
@@ -10,7 +10,7 @@ import Foundation
 
 @Model
 class WordEntry: Identifiable, Codable, Hashable, Equatable {
-    
+    var id: String
     var word: String
     var meaning: String
     var sentence: String
@@ -20,14 +20,15 @@ class WordEntry: Identifiable, Codable, Hashable, Equatable {
     var customID: UUID = UUID()
     var creationDate: Date = Date()
     
-    init(word: String, meaning: String, sentence: String, source: String? = "Default Source") {
+    init(word: String, meaning: String, sentence: String, source: String? = "User") {
         self.word = word
         self.meaning = meaning
         self.sentence = sentence
-        self.source = source
+        self.source = source ?? "User"
         self.customID = UUID()
         self.creationDate = Date()
         self.isLearned = false
+        self.id = UUID().uuidString
     }
     
     enum CodingKeys: String, CodingKey {
@@ -41,11 +42,12 @@ class WordEntry: Identifiable, Codable, Hashable, Equatable {
         self.word = try container.decode(String.self, forKey: .word)
         self.meaning = try container.decode(String.self, forKey: .meaning)
         self.sentence = try container.decode(String.self, forKey: .sentence)
-        self.source = try container.decodeIfPresent(String.self, forKey: .source)
+        self.source = try container.decodeIfPresent(String.self, forKey: .source)!
         
         self.isLearned = (try? container.decodeIfPresent(Bool.self, forKey: .isLearned)) ?? false
         self.creationDate = (try? container.decodeIfPresent(Date.self, forKey: .creationDate)) ?? Date()
         self.customID = (try? container.decodeIfPresent(UUID.self, forKey: .customID)) ?? UUID()
+        self.id = UUID().uuidString
     }
     
     func encode(to encoder: Encoder) throws {

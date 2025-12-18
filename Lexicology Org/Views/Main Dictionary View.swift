@@ -40,8 +40,6 @@ struct WordDictionaryView: View {
     }
 
     var body: some View {
-        // Use a split-view style layout for regular size classes (iPad, Mac)
-        // to show the list and detail side-by-side.
         if isRegular {
             NavigationSplitView {
                 listView
@@ -65,7 +63,6 @@ struct WordDictionaryView: View {
                 Text(errorMessage ?? "An unexpected error occurred.")
             }
         } else {
-            // Use the original NavigationStack for compact size classes (iPhone)
             NavigationStack(path: $path) {
                 contentView
                     .navigationTitle("Dictionary")
@@ -106,14 +103,13 @@ struct WordDictionaryView: View {
     
     private var listView: some View {
         List {
-            if isLoading { // Show loading indicator within the list when refreshing
+            if isLoading {
                 ProgressView("Loading...")
                     .tint(accentColor)
             }
             ForEach(sectionHeaders, id: \.self) { letter in
                 Section {
                     ForEach(groupedEntries[letter]!.sorted(by: { $0.word < $1.word })) { entry in
-                        // Use NavigationLink with value for NavigationStack (compact) or implicit selection (SplitView)
                         NavigationLink(value: entry) {
                             WordRowView(entry: entry)
                         }
@@ -143,7 +139,6 @@ struct WordDictionaryView: View {
         do {
             try await Task.sleep(nanoseconds: 500_000_000)
             
-            // NOTE: Since "words.json" isn't provided, use example data as fallback
             if let url = Bundle.main.url(forResource: "words", withExtension: "json") {
                 let data = try Data(contentsOf: url)
                 let entries = try JSONDecoder().decode([WordEntry].self, from: data)

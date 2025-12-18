@@ -246,8 +246,6 @@ struct WordCard: View {
         .padding(.top, 8)
     }
     
-    // MARK: - Computed Properties (Original Logic)
-    
     private var sourceIcon: String {
         guard let source = wordEntry.source else {
             return "book.fill"
@@ -321,7 +319,6 @@ struct WordCard: View {
     }
 }
 
-// MARK: - Previews (Retained)
 
 struct WordCard_Previews: PreviewProvider {
     static var previews: some View {
@@ -361,53 +358,5 @@ struct WordCard_Previews: PreviewProvider {
         .padding()
         .background(Color(.systemGroupedBackground))
         .previewDisplayName("Single Card")
-    }
-}
-
-// MARK: - Swipe Action Modifiers (Retained)
-
-extension WordCard {
-    func withSwipeActions(
-        edge: HorizontalEdge,
-        allowsFullSwipe: Bool,
-        onDelete: @escaping () -> Void,
-        onCopy: @escaping () -> Void
-    ) -> some View {
-        self.modifier(
-            SwipeActionsModifier(
-                edge: edge,
-                allowsFullSwipe: allowsFullSwipe,
-                onDelete: onDelete,
-                onCopy: onCopy
-            )
-        )
-    }
-}
-
-struct SwipeActionsModifier: ViewModifier {
-    let edge: HorizontalEdge
-    let allowsFullSwipe: Bool
-    let onDelete: () -> Void
-    let onCopy: () -> Void
-
-    func body(content: Content) -> some View {
-        content
-            .swipeActions(edge: edge, allowsFullSwipe: allowsFullSwipe) {
-                
-                Button(role: .destructive) {
-                    withAnimation(.spring()) {
-                        onDelete()
-                    }
-                } label: {
-                    Label("Delete", systemImage: "trash.fill")
-                }
-                
-                Button {
-                    onCopy()
-                } label: {
-                    Label("Copy", systemImage: "doc.on.doc.fill")
-                }
-                .tint(.blue)
-            }
     }
 }

@@ -168,12 +168,6 @@ struct WelcomePage: View {
             )
             .hidden()
             
-            NavigationLink(
-                destination: ContentsPage(),
-                isActive: $shouldNavigateToContent,
-                label: { EmptyView() }
-            )
-            .hidden()
         }
     }
     
